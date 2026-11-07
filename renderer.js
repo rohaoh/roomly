@@ -44,19 +44,19 @@ function installNewControls() {
   const dashboard = $('dashboard-view');
   const weather = document.createElement('article');
   weather.className = 'panel'; weather.id = 'weather-panel';
-  weather.innerHTML = '<div class="panel-heading"><div><h2>?ㅻ뒛???좎뵪</h2><p id="weather-location">?쒖슱 쨌 湲곗긽泥?/p></div><button class="link-button" id="weather-refresh">?덈줈怨좎묠</button></div><div class="weather-content"><strong id="weather-summary">API ???ㅼ젙 ???좎뵪瑜?遺덈윭?듬땲??</strong><span id="weather-details"></span></div><div id="weather-advisories" class="weather-advisories"></div>';
+  weather.innerHTML = '<div class="panel-heading"><div><h2>오늘의 날씨</h2><p id="weather-location">서울 · 기상청</p></div><button class="link-button" id="weather-refresh">새로고침</button></div><div class="weather-content"><strong id="weather-summary">API를 설정하면 날씨를 불러옵니다.</strong><span id="weather-details"></span></div><div id="weather-advisories" class="weather-advisories"></div>';
   dashboard.insertBefore(weather, dashboard.querySelector('.metric-grid'));
   const overview = document.createElement('section'); overview.className = 'device-overview panel'; overview.id = 'device-overview';
-  overview.innerHTML = '<div class="panel-heading"><div><h2>?곌껐??湲곌린</h2><p id="device-overview-count">?곌껐 ?湲?以?/p></div><label class="device-filter-label">?쒖떆 湲곌린<select id="device-filter"><option value="all">?꾩껜 湲곌린</option></select></label></div><div id="device-cards" class="device-cards"></div>';
+  overview.innerHTML = '<div class="panel-heading"><div><h2>기기 현황</h2><p id="device-overview-count">연결 0 · 등록 0</p></div><label class="device-filter-label">표시 기기 <select id="device-filter"><option value="all">모든 기기</option></select></label></div><div id="device-cards" class="device-cards"></div>';
   dashboard.querySelector('.status-banner').insertAdjacentElement('afterend', overview);
   $('device-filter').addEventListener('change', event => { state.selectedDeviceId = event.target.value; renderDashboard(); });
   const gas = document.createElement('article');
   gas.className = 'metric-card gas-card';
-  gas.innerHTML = '<div class="metric-top"><div><span class="metric-label">媛???쇱꽌 ?먯떆媛?/span><div class="metric-value" id="current-gas">--<small>raw</small></div></div><div class="metric-icon">??/div></div><div class="metric-foot"><span class="metric-state" id="gas-state">?꾨몢?대끂 ?곗씠???湲?/span><span class="range-label">ADC 0??023</span></div>';
+  gas.innerHTML = '<div class="metric-top"><div><span class="metric-label">가스 센서 값</span><div class="metric-value" id="current-gas">--<small>raw</small></div></div><div class="metric-icon">◉</div></div><div class="metric-foot"><span class="metric-state" id="gas-state">센서 연결 대기</span><span class="range-label">ADC 0–1023</span></div>';
   dashboard.querySelector('.metric-grid').append(gas);
   const light = document.createElement('article');
   light.className = 'metric-card light-card';
-  light.innerHTML = '<div class="metric-top"><div><span class="metric-label">議곕룄 ?쇱꽌 諛앷린</span><div class="metric-value" id="current-light">--<small>raw</small></div></div><div class="metric-icon">??/div></div><div class="metric-foot"><span class="metric-state" id="light-state">?꾨몢?대끂 ?곗씠???湲?/span><span class="range-label">ADC 0??023</span></div>';
+  light.innerHTML = '<div class="metric-top"><div><span class="metric-label">조도 센서 밝기</span><div class="metric-value" id="current-light">--<small>lux*</small></div></div><div class="metric-icon">☼</div></div><div class="metric-foot"><span class="metric-state" id="light-state">센서 연결 대기</span><span class="range-label">ADC 0–1023</span></div>';
   dashboard.querySelector('.metric-grid').append(light);
   const chart = $('history-chart');
   const roomChartList = document.createElement('div'); roomChartList.id = 'room-chart-list'; roomChartList.className = 'room-chart-list hidden';
@@ -68,10 +68,10 @@ function installNewControls() {
   }
   const legend = document.querySelector('.chart-legend'); legend.replaceChildren();
   const seriesOptions = [
-    { key: 'temperature', label: '?⑤룄', color: 'temp-legend' },
-    { key: 'humidity', label: '?듬룄', color: 'humidity-legend' },
+    { key: 'temperature', label: '온도', color: 'temp-legend' },
+    { key: 'humidity', label: '습도', color: 'humidity-legend' },
     { key: 'gasRaw', label: 'Gas', color: 'gas-legend' },
-    { key: 'lightLux', label: '議곕룄(異붿젙 lux)', color: 'light-legend' },
+    { key: 'lightLux', label: '조도 (lux)', color: 'light-legend' },
   ];
   try {
     const savedSeries = JSON.parse(localStorage.getItem('chart-series') || 'null');
@@ -127,13 +127,13 @@ function installQualityControls() {
   banner.insertAdjacentElement('afterend', freshness);
   const historyHead = document.querySelector('#history-view .welcome-row');
   const tools = document.createElement('div'); tools.className = 'data-tools';
-  tools.innerHTML = '<label>?쒖옉 <input type="date" id="csv-start"></label><label>醫낅즺 <input type="date" id="csv-end"></label><button class="button button-outline" id="backup-export">諛깆뾽 ???/button><button class="button button-outline" id="backup-import">諛깆뾽 蹂듭썝</button>';
+  tools.innerHTML = '<label>시작일 <input type="date" id="csv-start"></label><label>종료일 <input type="date" id="csv-end"></label><button class="button button-outline" id="backup-export">백업 내보내기</button><button class="button button-outline" id="backup-import">백업 복원</button>';
   historyHead.insertAdjacentElement('afterend', tools);
   const diagnostics = document.createElement('div'); diagnostics.className = 'panel'; diagnostics.id = 'diagnostics-panel'; diagnostics.style.cssText = 'padding:14px 18px;margin:0 0 14px;font-size:10px;color:#64726c';
-  diagnostics.textContent = '?쇱꽌 吏꾨떒 ?뺣낫瑜?遺덈윭?ㅻ뒗 以묒엯?덈떎.';
+  diagnostics.textContent = '센서 진단 정보를 불러오는 중입니다.';
   document.querySelector('#history-view .history-panel').insertAdjacentElement('beforebegin', diagnostics);
   const activity = document.createElement('div'); activity.className = 'activity-grid';
-  activity.innerHTML = '<section class="panel activity-panel"><div class="panel-heading"><div><h2>痢≪젙 湲곕줉 ?щ젰</h2><p>痢≪젙???녾굅???곌껐???딄릿 ?좎쭨瑜??뺤씤?⑸땲??</p></div><div class="calendar-nav"><button class="button button-quiet" id="calendar-prev" aria-label="?댁쟾 ??>??/button><strong id="calendar-month"></strong><button class="button button-quiet" id="calendar-next" aria-label="?ㅼ쓬 ??>??/button></div></div><div class="calendar-weekdays"><span>??/span><span>??/span><span>??/span><span>紐?/span><span>湲?/span><span>??/span><span>??/span></div><div class="calendar-days" id="calendar-days"></div><div class="calendar-legend"><span class="legend-good"></span>湲곕줉 ?덉쓬 <span class="legend-gap"></span>以묎컙 ?꾨씫 <span class="legend-none"></span>湲곕줉 ?놁쓬</div><div id="calendar-detail" class="calendar-detail">?좎쭨瑜??좏깮?섎㈃ 痢≪젙 諛??곌껐 ?곹깭媛 ?쒖떆?⑸땲??</div></section><section class="panel activity-panel"><div class="panel-heading"><div><h2>?뚮┝ ?대젰</h2><p>湲곗? ?댄깉遺??蹂듦?源뚯????쒓컙?낅땲??</p></div></div><div id="alarm-history" class="alarm-history"></div></section></div>';
+  activity.innerHTML = '<section class="panel activity-panel"><div class="panel-heading"><div><h2>측정 기록 달력</h2><p>측정 데이터와 연결이 끊긴 날짜를 확인합니다.</p></div><div class="calendar-nav"><button class="button button-quiet" id="calendar-prev" aria-label="이전 달">←</button><strong id="calendar-month"></strong><button class="button button-quiet" id="calendar-next" aria-label="다음 달">→</button></div></div><div class="calendar-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div><div class="calendar-days" id="calendar-days"></div><div class="calendar-legend"><span class="legend-good"></span>기록 있음 <span class="legend-gap"></span>측정 중단 <span class="legend-none"></span>기록 없음</div><div id="calendar-detail" class="calendar-detail">날짜를 선택하면 측정 및 연결 상태가 표시됩니다.</div></section><section class="panel activity-panel"><div class="panel-heading"><div><h2>알림 기록</h2><p>기준 이탈 알림 기록을 확인합니다.</p></div></div><div id="alarm-history" class="alarm-history"></div></section></div>';
   diagnostics.insertAdjacentElement('afterend', activity);
   $('calendar-prev').addEventListener('click', () => { state.calendarMonth.setMonth(state.calendarMonth.getMonth() - 1); renderDataCalendar(); });
   $('calendar-next').addEventListener('click', () => { state.calendarMonth.setMonth(state.calendarMonth.getMonth() + 1); renderDataCalendar(); });
@@ -159,8 +159,8 @@ function installQualityControls() {
   $('chart-period').addEventListener('change', () => { localStorage.setItem('chart-period', $('chart-period').value); updateChartAxisLabels(); renderChart(periodHistory()); renderTrendSummary(); });
   const reviewStatus = document.createElement('div'); reviewStatus.id = 'daily-review-status'; reviewStatus.className = 'inline-status hidden'; reviewStatus.setAttribute('role', 'status');
   $('report-panel').insertAdjacentElement('beforebegin', reviewStatus);
-  $('backup-export').addEventListener('click', async () => { try { if (await appApi.exportData()) toast('諛깆뾽 ?뚯씪????ν뻽?듬땲??'); } catch (error) { toast(error.message, true); } });
-  $('backup-import').addEventListener('click', async () => { try { const result = await appApi.importData(); if (result) toast(`${result.imported}媛?湲곕줉??蹂듭썝?덉뒿?덈떎.`); } catch (error) { toast(error.message, true); } });
+  $('backup-export').addEventListener('click', async () => { try { if (await appApi.exportData()) toast('백업 파일을 저장했습니다.'); } catch (error) { toast(error.message, true); } });
+  $('backup-import').addEventListener('click', async () => { try { const result = await appApi.importData(); if (result) toast(`${result.imported}건의 기록을 복원했습니다.`); } catch (error) { toast(error.message, true); } });
   $('save-notification-repeat').addEventListener('click', async () => { try { state.notificationRepeatMinutes = await appApi.setNotificationRepeat($('notification-repeat').value); toast('?뚮┝ 諛섎났 媛꾧꺽????ν뻽?듬땲??'); } catch (error) { toast(error.message, true); } });
   $('save-system-settings').addEventListener('click', async () => {
     try {
@@ -223,14 +223,14 @@ function renderTrendSummary() {
 
 function renderDiagnostics() {
   if (!$('diagnostics-panel')) return;
-  const ports = state.portPath ? `${state.portPath} · ${$('baud-select')?.value || 9600} baud` : 'No port selected';
+  const ports = state.portPath ? `${state.portPath} · ${$('baud-select')?.value || 9600} baud` : '선택된 포트 없음';
   const currentReading = currentDeviceLatest();
   const age = currentReading?.timestamp ? Math.max(0, Math.floor((Date.now() - Date.parse(currentReading.timestamp)) / 1000)) : null;
   const freshLimit = Math.max(45, Number(state.systemSettings?.sampleIntervalSeconds || 30) * 2.5);
   const stale = age == null || age >= freshLimit;
-  const freshness = age == null ? 'No readings yet' : age < freshLimit ? `Last reading ${age}s ago` : `Data delayed · last reading ${Math.floor(age / 60)}m ago`;
-  const profile = state.systemSettings ? `${state.systemSettings.deviceName} · ${state.systemSettings.temperatureSensor}/${state.systemSettings.gasSensor}/${state.systemSettings.lightSensor}` : 'Sensor profile unavailable';
-  $('diagnostics-panel').textContent = `Profile ${profile} · ${ports} · ${state.connected ? 'Port connected' : 'Port disconnected'} · ${freshness} · Invalid lines ${state.diagnostics?.invalidSensorLines || 0} · Quality flags ${state.qualityEventCount || 0}${state.historyTruncated ? ' · Older records were removed by retention limits' : ''}${state.lastSerialError ? ` · Last error: ${state.lastSerialError}` : ''}`;
+  const freshness = age == null ? '측정 기록 없음' : age < freshLimit ? `${age}초 전 측정` : `측정 지연 · 마지막 측정 ${Math.floor(age / 60)}분 전`;
+  const profile = state.systemSettings ? `${state.systemSettings.deviceName} · ${state.systemSettings.temperatureSensor}/${state.systemSettings.gasSensor}/${state.systemSettings.lightSensor}` : '센서 프로필 없음';
+  $('diagnostics-panel').textContent = `센서 프로필 ${profile} · ${ports} · ${state.connected ? '포트 연결됨' : '포트 연결 끊김'} · ${freshness} · 잘못된 데이터 ${state.diagnostics?.invalidSensorLines || 0}건 · 품질 경고 ${state.qualityEventCount || 0}건${state.historyTruncated ? ' · 보관 기간이 지난 기록이 삭제됨' : ''}${state.lastSerialError ? ` · 마지막 오류: ${state.lastSerialError}` : ''}`;
   $('sensor-freshness').textContent = freshness;
   $('sensor-freshness').classList.toggle('warning-state', stale);
   document.querySelector('.live-pill').classList.toggle('offline', !state.connected || stale);
@@ -242,11 +242,11 @@ setInterval(() => { renderDiagnostics(); }, 1000);
 
 function renderWeather(snapshot = state.weather) {
   if (!snapshot) return;
-  $('weather-location').textContent = `${state.weatherSettings.region || 'Seoul'} ? Weather`;
+  $('weather-location').textContent = `${state.weatherSettings.region || '서울'} · 기상청`;
   const weather = snapshot.weather;
   if (!weather) { $('weather-summary').textContent = snapshot.error || 'Weather data unavailable'; return; }
-  $('weather-summary').textContent = `${weather.temperature ?? '--'}?C ? ${weather.sky || 'Weather'}${weather.pty && weather.pty !== '0' ? ' ? Precipitation' : ''}`;
-  $('weather-details').textContent = `Today: ${weather.min ?? '--'}? to ${weather.max ?? '--'}? ? Rain chance ${weather.pop ?? '--'}%`;
+  $('weather-summary').textContent = `${weather.temperature ?? '--'}°C · ${weather.sky || '날씨'}${weather.pty && weather.pty !== '0' ? ' · 강수' : ''}`;
+  $('weather-details').textContent = `오늘 최저 ${weather.min ?? '--'}° · 최고 ${weather.max ?? '--'}° · 강수 확률 ${weather.pop ?? '--'}%`;
   const list = $('weather-advisories'); list.replaceChildren();
   const advisories = snapshot.advisories || [];
   if (!advisories.length) { list.textContent = snapshot.error || 'No active weather advisories'; return; }
@@ -332,16 +332,16 @@ function renderDeviceOverview() {
   filter.value = [...filter.options].some(option => option.value === previous) ? previous : (state.devices[0]?.id || 'all');
   state.selectedDeviceId = filter.value;
   cards.replaceChildren();
-  $('device-overview-count').textContent = `${state.connectedDevices.length} connected ? ${state.devices.length} known`;
-  if (!state.devices.length) { const empty = document.createElement('p'); empty.className = 'device-empty'; empty.textContent = 'Connect a sensor to view its readings.'; cards.append(empty); return; }
+  $('device-overview-count').textContent = `연결 ${state.connectedDevices.length}대 · 등록 ${state.devices.length}대`;
+  if (!state.devices.length) { const empty = document.createElement('p'); empty.className = 'device-empty'; empty.textContent = '센서를 연결하면 측정값을 확인할 수 있어요.'; cards.append(empty); return; }
   for (const device of state.devices) {
     const reading = latestById[device.id];
     const card = document.createElement('article'); card.className = `device-reading-card${connectedIds.has(device.id) ? ' device-online' : ''}`;
     const name = document.createElement('strong'); name.textContent = device.name || device.id;
     const port = document.createElement('small'); port.textContent = device.path || device.id;
     const values = document.createElement('div'); values.className = 'device-reading-values';
-    values.textContent = reading ? `${Number(reading.temperature).toFixed(1)}?C ? ${Number(reading.humidity).toFixed(0)}%` : 'Waiting for readings';
-    const status = document.createElement('small'); status.textContent = connectedIds.has(device.id) ? 'Connected' : reading ? `Last reading ${formatTime(reading.timestamp)}` : 'Disconnected';
+    values.textContent = reading ? `${Number(reading.temperature).toFixed(1)}°C · ${Number(reading.humidity).toFixed(0)}%` : '측정 대기 중';
+    const status = document.createElement('small'); status.textContent = connectedIds.has(device.id) ? '연결됨' : reading ? `마지막 측정 ${formatTime(reading.timestamp)}` : '연결 끊김';
     card.append(name, port, values, status); cards.append(card);
   }
 }
@@ -396,30 +396,30 @@ function analysisRange() {
 function renderDashboard() {
   renderDeviceOverview();
   const connected = currentDeviceConnected(), t = state.thresholds, latest = currentDeviceLatest();
-  $('threshold-temp-text').textContent = `${t.temperatureMin ?? 18}?C ? ${t.temperatureMax ?? 28}?C`;
-  $('threshold-humidity-text').textContent = `${t.humidityMin ?? 30}% ? ${t.humidityMax ?? 65}%`;
-  $('temp-range').textContent = `Range ${t.temperatureMin ?? 18} ? ${t.temperatureMax ?? 28}?C`;
-  $('humidity-range').textContent = `Range ${t.humidityMin ?? 30} ? ${t.humidityMax ?? 65}%`;
-  $('current-temp').innerHTML = latest ? `${Number(latest.temperature).toFixed(1)}<small>?C</small>` : '--<small>?C</small>';
+  $('threshold-temp-text').textContent = `${t.temperatureMin ?? 18}°C – ${t.temperatureMax ?? 28}°C`;
+  $('threshold-humidity-text').textContent = `${t.humidityMin ?? 30}% – ${t.humidityMax ?? 65}%`;
+  $('temp-range').textContent = `기준 ${t.temperatureMin ?? 18} ~ ${t.temperatureMax ?? 28}°C`;
+  $('humidity-range').textContent = `기준 ${t.humidityMin ?? 30} ~ ${t.humidityMax ?? 65}%`;
+  $('current-temp').innerHTML = latest ? `${Number(latest.temperature).toFixed(1)}<small>°C</small>` : '--<small>°C</small>';
   $('current-humidity').innerHTML = latest ? `${Number(latest.humidity).toFixed(0)}<small>%</small>` : '--<small>%</small>';
   $('current-gas').innerHTML = latest?.gasRaw != null ? `${Number(latest.gasRaw)}<small>raw</small>` : '--<small>raw</small>';
   $('current-light').innerHTML = latest?.lightLux != null ? `${Number(latest.lightLux).toFixed(0)}<small>lux*</small>` : '--<small>lux*</small>';
   const todayItems = lastDay();
-  $('average-temp').innerHTML = `${avg(todayItems, 'temperature')}<small>?C</small>`;
+  $('average-temp').innerHTML = `${avg(todayItems, 'temperature')}<small>°C</small>`;
   $('average-humidity').innerHTML = `${avg(todayItems, 'humidity')}<small>%</small>`;
-  $('sample-count').textContent = `${todayItems.length.toLocaleString()} readings`;
+  $('sample-count').textContent = `측정 ${todayItems.length.toLocaleString()}회`;
   const latestAlerts = latest ? currentAlerts(latest) : [];
   const alerts = connected ? latestAlerts : [];
-  $('temp-state').textContent = latest ? (alerts.length ? 'Outside configured range' : 'Within configured range') : 'Waiting for readings';
-  $('humidity-state').textContent = latest ? (alerts.length ? 'Outside configured range' : 'Within configured range') : 'Waiting for readings';
+  $('temp-state').textContent = latest ? (alerts.length ? '설정 범위 벗어남' : '설정 범위 내') : '측정 대기 중';
+  $('humidity-state').textContent = latest ? (alerts.length ? '설정 범위 벗어남' : '설정 범위 내') : '측정 대기 중';
   $('temp-state').classList.toggle('warning-state', alerts.length > 0);
   $('humidity-state').classList.toggle('warning-state', alerts.length > 0);
   const outside = todayItems.filter(item => currentAlerts(item).length);
-  $('threshold-count').textContent = outside.length ? `${outside.length} out-of-range readings` : 'No threshold violations today';
+  $('threshold-count').textContent = outside.length ? `기준 이탈 ${outside.length}회` : '오늘 기준 이탈 없음';
   $('threshold-count').classList.toggle('warning-state', outside.length > 0);
   $('status-banner').classList.toggle('warning', alerts.length > 0);
-  $('status-title').textContent = alerts.length ? 'Environment is outside configured limits' : connected ? (latest ? 'Sensor is connected and reporting' : 'Waiting for sensor data') : latest ? 'Sensor is disconnected' : 'Connect a sensor to begin';
-  $('status-description').textContent = alerts.length ? alerts.join(' ? ') : latest ? `Last reading ${formatTime(latest.timestamp)}${connected ? '' : ' ? Showing saved data'}` : 'Pair the HC-06 with your PC, then connect its COM port.';
+  $('status-title').textContent = alerts.length ? '환경이 설정 범위를 벗어났습니다' : connected ? (latest ? '센서가 연결되어 측정 중입니다' : '센서 데이터 대기 중') : latest ? '센서 연결이 끊겼습니다' : '센서를 연결해 주세요';
+  $('status-description').textContent = alerts.length ? alerts.join(' · ') : latest ? `마지막 측정 ${formatTime(latest.timestamp)}${connected ? '' : ' · 저장된 기록을 표시합니다'}` : 'HC-06을 PC와 페어링한 뒤 COM 포트를 연결하세요.';
   renderChart(periodHistory()); renderTrendSummary(); renderDiagnostics(); renderAlertList(outside); renderHistory();
 }
 
@@ -492,19 +492,19 @@ function renderHistory() {
   const tbody = $('history-table');
   renderDataCalendar(); renderAlarmHistory();
   const items = state.history.slice(-250).reverse();
-  $('history-count').textContent = `${state.history.length.toLocaleString()} readings ? showing latest 250`;
+  $('history-count').textContent = `전체 ${state.history.length.toLocaleString()}건 · 최근 250건 표시`;
   tbody.replaceChildren();
-  if (!items.length) { const row = tbody.insertRow(); const cell = row.insertCell(); cell.colSpan = 7; cell.className = 'empty-table'; cell.textContent = 'Sensor readings will appear here.'; return; }
+  if (!items.length) { const row = tbody.insertRow(); const cell = row.insertCell(); cell.colSpan = 7; cell.className = 'empty-table'; cell.textContent = '센서가 연결되면 측정 기록이 여기에 표시됩니다.'; return; }
   for (const item of items) {
     const row = tbody.insertRow();
     row.insertCell().textContent = formatTime(item.timestamp);
-    row.insertCell().textContent = item.deviceName || item.deviceId || 'Sensor';
-    row.insertCell().textContent = `${Number(item.temperature).toFixed(1)} ?C`;
-    row.insertCell().textContent = `${Number(item.humidity).toFixed(0)} %`;
+    row.insertCell().textContent = item.deviceName || item.deviceId || '센서';
+    row.insertCell().textContent = `${Number(item.temperature).toFixed(1)} °C`;
+    row.insertCell().textContent = `${Number(item.humidity).toFixed(0)}%`;
     row.insertCell().textContent = item.gasRaw == null ? '--' : `${item.gasRaw} raw`;
     row.insertCell().textContent = item.lightLux == null ? '--' : `${Number(item.lightLux).toFixed(0)} lux*`;
     const status = row.insertCell(), warnings = currentAlerts(item);
-    status.textContent = warnings.length ? warnings.join(', ') : item.qualityFlags?.length ? 'Review reading' : 'Normal';
+    status.textContent = warnings.length ? warnings.join(', ') : item.qualityFlags?.length ? '측정값 확인 필요' : '정상';
   }
 }
 
@@ -517,7 +517,7 @@ function localDayKey(value) {
 function renderDataCalendar() {
   const days = $('calendar-days'); if (!days) return;
   const month = state.calendarMonth, first = new Date(month.getFullYear(), month.getMonth(), 1);
-  $('calendar-month').textContent = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long' }).format(month);
+  $('calendar-month').textContent = new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long' }).format(month);
   const start = new Date(first); start.setDate(first.getDate() - ((first.getDay() + 6) % 7));
   const perDay = new Map();
   for (const reading of currentDeviceHistory()) {
@@ -532,21 +532,21 @@ function renderDataCalendar() {
     const button = document.createElement('button'); button.type = 'button';
     button.className = `calendar-day${date.getMonth() !== month.getMonth() ? ' outside-month' : ''}${readings.length ? (hasGap ? ' has-gap' : ' has-data') : ' no-data'}${key === state.selectedCalendarDate ? ' selected' : ''}`;
     button.innerHTML = `<span>${date.getDate()}</span><small>${readings.length ? readings.length : ''}</small>`;
-    button.title = readings.length ? `${readings.length} readings${hasGap ? ' ? data gap' : ''}` : 'No readings';
+    button.title = readings.length ? `측정 ${readings.length}건${hasGap ? ' · 측정 중단 구간 있음' : ''}` : '측정 기록 없음';
     button.addEventListener('click', () => { state.selectedCalendarDate = key; renderDataCalendar(); }); days.append(button);
   }
   const selected = state.selectedCalendarDate || localDayKey(new Date()); state.selectedCalendarDate = selected;
   const readings = perDay.get(selected) || [];
   const events = state.monitoringEvents.filter(item => localDayKey(item.timestamp) === selected && (state.selectedDeviceId === 'all' || !item.deviceId || item.deviceId === state.selectedDeviceId));
   const connects = events.filter(item => item.type === 'serial-connect').length, disconnects = events.filter(item => item.type === 'serial-disconnect').length;
-  const detail = readings.length ? `${readings.length} readings ? ${formatTime(readings[0].timestamp)} to ${formatTime(readings.at(-1).timestamp)}` : 'No sensor readings for this date.';
-  $('calendar-detail').textContent = `${selected} ? ${detail} ? ${connects} connections ? ${disconnects} disconnections`;
+  const detail = readings.length ? `측정 ${readings.length}건 · ${formatTime(readings[0].timestamp)} ~ ${formatTime(readings.at(-1).timestamp)}` : '이 날짜의 센서 기록이 없습니다.';
+  $('calendar-detail').textContent = `${selected} · ${detail} · 연결 ${connects}회 · 연결 해제 ${disconnects}회`;
 }
 
 function renderAlarmHistory() {
   const target = $('alarm-history'); if (!target) return; target.replaceChildren();
   const items = [...(state.alertHistory || [])].filter(item => state.selectedDeviceId === 'all' || !item.deviceId || item.deviceId === state.selectedDeviceId).reverse().slice(0, 30);
-  if (!items.length) { const empty = document.createElement('p'); empty.className = 'calendar-detail'; empty.textContent = 'No alerts recorded.'; target.append(empty); return; }
+  if (!items.length) { const empty = document.createElement('p'); empty.className = 'calendar-detail'; empty.textContent = '기록된 알림이 없습니다.'; target.append(empty); return; }
   for (const item of items) {
     const row = document.createElement('article'); row.className = `alarm-row${item.endedAt ? '' : ' alarm-active'}`;
     const title = document.createElement('strong'); title.textContent = `${item.deviceName ? `${item.deviceName} ? ` : ''}${item.message || item.key}`;
