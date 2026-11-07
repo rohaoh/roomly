@@ -4,7 +4,8 @@ const fs = require('node:fs');
 const { SerialPort } = require('serialport');
 
 // Paste the Gemini API key here before building the app. This key is extractable from distributed desktop apps.
-const GEMINI_API_KEY = "AQ.Ab8RN6J-7Bhvvc6OXdUBkUNvlwynE355eUAQKXGIJqQfYapZNA";
+const GEMINI_API_KEY = "#####################################################"; 
+//API 마스킹됨
 const GEMINI_MODEL = 'gemini-3.8-flash';
 let aiClient;
 
