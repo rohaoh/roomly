@@ -1,0 +1,54 @@
+{
+  "name": "app-client",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Oh Roha",
+  "description": "Room environment dashboard for Arduino Uno and HC-06",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^44.8.0",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "@google/genai": "^2.30.0",
+    "dompurify": "^3.4.17",
+    "marked": "^18.1.1",
+    "serialport": "^13.0.0"
+  },
+  "allowScripts": {
+    "@serialport/bindings-cpp@13.0.0": true
+  },
+  "build": {
+    "appId": "com.ohroha.roomly",
+    "productName": "Roomly",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "assets/roomly.svg",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "icon": "assets/roomly.svg"
+    },
+    "linux": {
+      "icon": "assets/roomly.svg"
+    }
+  }
+}

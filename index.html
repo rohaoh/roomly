@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:">
+  <title>Roomly | 실내 환경</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Roomly 홈">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span>roomly<span class="brand-dot">.</span></span>
+      </a>
+      <p class="side-label">WORKSPACE</p>
+      <nav class="side-nav" aria-label="주 메뉴">
+        <button class="nav-item active" data-view="dashboard"><span class="nav-icon">◫</span> 대시보드</button>
+        <button class="nav-item" data-view="history"><span class="nav-icon">◷</span> 기록</button>
+        <button class="nav-item" data-view="insights"><span class="nav-icon">✳</span> AI 인사이트 <span class="nav-new">NEW</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="device-card">
+          <div class="device-head"><span class="tiny-dot" id="device-dot"></span><span>센서 연결</span></div>
+          <strong id="device-label">연결 대기 중</strong>
+          <span class="device-sub" id="device-sub">Arduino + HC-06</span>
+        </div>
+        <button class="nav-item settings-link" id="open-settings"><span class="nav-icon">⚙</span> 설정</button>
+        <div class="profile"><div class="avatar">R</div><div><strong>내 공간</strong><small>환경 모니터링 · v1.0.0</small></div><span class="profile-menu">···</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb">내 공간 <span>/</span> <strong id="page-name">대시보드</strong></div>
+        <div class="top-actions"><span class="live-pill"><span></span> 실시간 모니터링</span><button class="icon-button" id="top-settings" aria-label="설정 열기">⚙</button></div>
+      </header>
+
+      <section class="view active" id="dashboard-view">
+        <div class="welcome-row">
+          <div><p class="eyebrow" id="today-label">ROOM ENVIRONMENT</p><h1>오늘의 공간 상태 <span class="sun-icon">☀</span></h1><p class="subheading">내 공간의 온도와 습도를 한눈에 살펴보세요.</p></div>
+          <button class="button button-outline" id="dashboard-connect">블루투스 연결 <span>↗</span></button>
+        </div>
+
+        <div class="status-banner" id="status-banner"><div class="status-symbol">⌁</div><div class="status-copy"><strong id="status-title">센서를 연결해 주세요</strong><span id="status-description">HC-06을 PC와 페어링한 뒤 COM 포트를 선택하면 데이터가 표시됩니다.</span></div><button class="text-button" id="banner-settings">연결 설정 <span>→</span></button></div>
+
+        <div class="metric-grid">
+          <article class="metric-card temperature-card"><div class="metric-top"><div><span class="metric-label">현재 온도</span><div class="metric-value" id="current-temp">--<small>°C</small></div></div><div class="metric-icon temp-icon">☼</div></div><div class="metric-foot"><span class="metric-state" id="temp-state">센서 연결 대기</span><span class="range-label" id="temp-range">기준 -- ~ --°C</span></div></article>
+          <article class="metric-card humidity-card"><div class="metric-top"><div><span class="metric-label">현재 습도</span><div class="metric-value" id="current-humidity">--<small>%</small></div></div><div class="metric-icon humidity-icon">◒</div></div><div class="metric-foot"><span class="metric-state" id="humidity-state">센서 연결 대기</span><span class="range-label" id="humidity-range">기준 -- ~ --%</span></div></article>
+          <article class="metric-card summary-card"><div class="metric-top"><div><span class="metric-label">오늘 평균 온도</span><div class="metric-value" id="average-temp">--<small>°C</small></div></div><div class="metric-icon average-icon">↗</div></div><div class="metric-foot"><span class="metric-state neutral-state" id="sample-count">측정 기록이 없습니다</span><span class="range-label">최근 24시간</span></div></article>
+          <article class="metric-card summary-card"><div class="metric-top"><div><span class="metric-label">오늘 평균 습도</span><div class="metric-value" id="average-humidity">--<small>%</small></div></div><div class="metric-icon average-icon humidity-average">⌁</div></div><div class="metric-foot"><span class="metric-state neutral-state" id="threshold-count">기준 이탈 기록 없음</span><span class="range-label">알림 기준</span></div></article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><h2>환경 변화</h2><p>최근 24시간 센서 기록</p></div><button class="select-like" id="chart-range">최근 24시간⌄</button></div><div class="chart-legend"><span><i class="legend-dot temp-legend"></i>온도</span><span><i class="legend-dot humidity-legend"></i>습도</span><span class="chart-units">온도 °C · 습도 %</span></div><div class="chart-wrap"><svg id="history-chart" viewBox="0 0 760 230" preserveAspectRatio="none" role="img" aria-label="최근 온습도 그래프"><g class="grid-lines"><line x1="42" y1="25" x2="750" y2="25"/><line x1="42" y1="75" x2="750" y2="75"/><line x1="42" y1="125" x2="750" y2="125"/><line x1="42" y1="175" x2="750" y2="175"/></g><text class="axis-label" x="4" y="29">100</text><text class="axis-label" x="12" y="79">75</text><text class="axis-label" x="12" y="129">50</text><text class="axis-label" x="12" y="179">25</text><path id="temp-path" class="chart-line temp-line" d=""/><path id="humidity-path" class="chart-line humidity-line" d=""/><text class="axis-label" x="42" y="215">24시간 전</text><text class="axis-label" x="364" y="215">12시간 전</text><text class="axis-label" x="704" y="215">현재</text></svg><div class="chart-empty" id="chart-empty"><span>⌁</span><strong>아직 표시할 기록이 없어요</strong><small>센서를 연결하면 변화 그래프가 시작됩니다.</small></div></div></article>
+          <article class="panel alerts-panel"><div class="panel-heading"><div><h2>환경 기준</h2><p>내가 설정한 알림 범위</p></div><button class="edit-button" id="edit-thresholds">수정 <span>↗</span></button></div><div class="threshold-row"><div class="threshold-icon warm">☼</div><div class="threshold-info"><strong>온도</strong><span id="threshold-temp-text">18°C — 28°C</span></div><span class="threshold-check">✓</span></div><div class="threshold-row"><div class="threshold-icon cool">◒</div><div class="threshold-info"><strong>습도</strong><span id="threshold-humidity-text">30% — 65%</span></div><span class="threshold-check">✓</span></div><div class="alert-divider"></div><div class="alert-history-head"><strong>최근 알림</strong><button class="link-button" data-view-link="history">기록 보기 →</button></div><div class="alert-list" id="alert-list"><div class="empty-small"><span>✓</span>기준을 벗어난 기록이 없습니다.</div></div></article>
+        </div>
+
+        <article class="panel ai-preview"><div class="ai-orb">✳</div><div class="ai-preview-copy"><span class="eyebrow">ROOMLY AI</span><h2>내 공간의 기록을 AI가 정리해 드려요</h2><p>하루 동안의 온습도 흐름과 설정 기준을 바탕으로 환경 리포트를 생성합니다.</p></div><button class="button button-dark" data-view-link="insights">AI 인사이트 보기 <span>→</span></button></article>
+        <p class="footer-note">Roomly v1.0.0 · 제작 오로하 (Oh Roha) · 환경 수치는 참고 정보이며 건강 상태나 안전을 진단하지 않습니다.</p>
+      </section>
+
+      <section class="view" id="history-view"><div class="welcome-row"><div><p class="eyebrow">YOUR DATA</p><h1>센서 기록</h1><p class="subheading">기록은 이 PC에 저장됩니다.</p></div><button class="button button-outline" id="history-export">CSV 내보내기 ↓</button></div><div class="panel history-panel"><div class="panel-heading"><div><h2>최근 측정값</h2><p id="history-count">기록 없음</p></div><span class="select-like">최신순</span></div><div class="table-scroll"><table><thead><tr><th>측정 시간</th><th>기기</th><th>온도</th><th>습도</th><th>가스 raw</th><th>조도</th><th>상태</th></tr></thead><tbody id="history-table"><tr><td colspan="7" class="empty-table">센서가 연결되면 측정 기록이 여기에 표시됩니다.</td></tr></tbody></table></div></div></section>
+
+      <section class="view" id="insights-view"><div class="welcome-row"><div><p class="eyebrow">ROOMLY AI</p><h1>AI 인사이트 <span class="sparkle">✳</span></h1><p class="subheading">원하는 기록 기간을 골라 공간 환경을 요약합니다.</p></div><div class="analysis-controls"><select id="analysis-period" aria-label="AI 분석 기간"><option value="24h">최근 24시간</option><option value="7d">최근 7일</option><option value="30d">최근 30일</option><option value="custom">직접 날짜 선택</option></select><button class="button button-dark" id="analyze-button">✳ 지금 분석하기</button></div></div><div class="custom-range hidden" id="custom-range"><label>시작일<input type="date" id="analysis-start"></label><span>부터</span><label>종료일<input type="date" id="analysis-end"></label></div><div class="ai-notice"><span>ⓘ</span><div>분석을 실행하면 선택한 기간의 온습도 요약과 설정 기준이 Roomly 서버를 거쳐 Gemini API로 전송됩니다. 상세 측정 기록은 이 PC에 보관됩니다.</div></div><div class="panel report-panel" id="report-panel"><div class="report-placeholder"><div class="report-icon">✳</div><strong>아직 AI 리포트가 없습니다</strong><span>센서를 연결해 기록을 쌓은 뒤 분석을 시작해 보세요.</span></div></div><div class="panel saved-reports"><div class="panel-heading"><div><h2>지난 리포트</h2><p>수동 분석 및 하루 1회 자동 요약</p></div></div><div id="report-list" class="report-list"><div class="empty-small">저장된 리포트가 없습니다.</div></div></div><p class="footer-note">AI가 만든 내용은 환경 기록에 대한 참고 요약이며, 의학적 조언이 아닙니다.</p></section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="settings-modal" aria-hidden="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-title"><div class="modal-heading"><div><span class="eyebrow">PREFERENCES</span><h2 id="settings-title">앱 설정</h2></div><button class="close-button" id="close-settings" aria-label="닫기">×</button></div>
+    <div class="settings-section"><div class="settings-title"><div><h3>Arduino 연결</h3><p>HC-06을 페어링한 뒤 생성된 COM 포트를 선택하세요.</p></div><button class="link-button" id="refresh-ports">포트 새로고침</button></div><div class="connection-controls"><select id="port-select" aria-label="COM 포트 선택"><option value="">포트 검색 중...</option></select><select id="baud-select" aria-label="통신 속도"><option value="9600">9600 baud</option><option value="38400">38400 baud</option><option value="57600">57600 baud</option><option value="115200">115200 baud</option></select><input id="device-name-connect" maxlength="40" placeholder="&#44592;&#44592; &#51060;&#47492; (&#49440;&#53469;)" aria-label="&#44592;&#44592; &#51060;&#47492;"><button class="button button-dark" id="connect-button">연결</button></div><div class="inline-status" id="connection-message">Arduino에서 한 줄마다 JSON 또는 온도,습도 형식으로 보내면 됩니다.</div><div id="connected-devices" class="connected-device-list"></div><div class="format-example"><code>{"temperature": 24.5, "humidity": 48}</code><span>또는</span><code>24.5,48</code></div></div>
+    <div class="settings-section"><div class="settings-title"><div><h3>알림 기준</h3><p>기본값: 온도 18–28°C, 습도 30–65% · 벗어나면 데스크톱 알림을 표시합니다.</p></div><button class="link-button" id="reset-thresholds" type="button">기본값으로 되돌리기</button><button class="link-button" id="test-notification" type="button">Test Windows notification</button></div><form id="threshold-form" class="threshold-form"><label>최저 온도<input type="number" step="0.1" name="temperatureMin" required><span>°C</span></label><label>최고 온도<input type="number" step="0.1" name="temperatureMax" required><span>°C</span></label><label>최저 습도<input type="number" step="1" name="humidityMin" min="0" max="100" required><span>%</span></label><label>최고 습도<input type="number" step="1" name="humidityMax" min="0" max="100" required><span>%</span></label><button class="button button-dark form-submit" type="submit">기준 저장</button></form></div>
+                <div class="settings-section"><div class="settings-title"><div><h3>Gemini AI</h3><p>The Gemini API key is configured in main.js.</p></div></div><div class="inline-status" id="account-status">AI analysis uses the key bundled in this app.</div><div class="daily-note"><span>!</span><span>This prototype embeds the Gemini key in the desktop app. Anyone who receives the app can extract and use the same key, and may exhaust the project's free quota. Do not publish this build publicly.</span></div></div>
+    <div class="modal-footer"><span>환경 알림은 사용자가 정한 기준에 따라 동작합니다.</span><button class="button button-outline" id="done-settings">완료</button></div>
+  </section></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="./node_modules/marked/lib/marked.umd.js"></script>
+  <script src="./node_modules/dompurify/dist/purify.min.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
